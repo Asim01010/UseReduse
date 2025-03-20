@@ -3,12 +3,30 @@ const UseReducer = () => {
   const [name, setName] = useState("");
 
   const reduce = (state, action) => {
-    if (action == "EMPTY_VALUE") {
+    if (action.type == "INVALID_STATE") {
       return {
         ...state,
         error: true,
+        success: false,
         message: "please enter a value",
-        succes: false,
+      };
+    }
+
+    if (action.type == "ACCEPTED") {
+      return {
+        ...state,
+        error: false,
+        success: true,
+        message: "Your Command Done",
+      };
+    }
+
+    if (action.type == "RESET") {
+      return {
+        ...state,
+        error: false,
+        message: "",
+        success: false,
       };
     }
   };
@@ -16,7 +34,7 @@ const UseReducer = () => {
   const initialState = {
     data: [],
     error: false,
-    succes: false,
+    success: false,
     message: "",
   };
 
@@ -25,9 +43,16 @@ const UseReducer = () => {
   const btnHandle = (e) => {
     e.preventDefault();
     if (!name) {
-      dispatch({ type: "EMPTY_VALUE" });
+      dispatch({ type: "INVALID_STATE" });
+    }
+    if (name) {
+      dispatch({ type: "ACCEPTED" });
     }
   };
+
+  setInterval(() => {
+    dispatch({ type: "RESET" });
+  }, 3000);
 
   return (
     <>
@@ -40,6 +65,8 @@ const UseReducer = () => {
             type="text"
             className="w-full border-4 outline-0 border-b-gray-400 border-t-0 border-l-0 border-r-0  my-3 "
           />
+          {state.error && <p className="text-red-500">access denied</p>}
+          {/* {state.error || <p className="text-green-500">succefully add</p>} */}
 
           <button
             onClick={btnHandle}
