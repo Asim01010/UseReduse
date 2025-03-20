@@ -1,43 +1,9 @@
 import React, { useReducer, useState } from "react";
+import { FaTrash } from "react-icons/fa6";
+import { initialState, reduce } from "./reduce";
+
 const UseReducer = () => {
   const [name, setName] = useState("");
-
-  const reduce = (state, action) => {
-    if (action.type == "INVALID_STATE") {
-      return {
-        ...state,
-        error: true,
-        success: false,
-        message: "please enter a value",
-      };
-    }
-
-    if (action.type == "ACCEPTED") {
-      return {
-        ...state,
-        error: false,
-        success: true,
-        message: "Your Command Done",
-        data: [...state.data, action.payload],
-      };
-    }
-
-    if (action.type == "RESET") {
-      return {
-        ...state,
-        error: false,
-        message: "",
-        success: false,
-      };
-    }
-  };
-
-  const initialState = {
-    data: [],
-    error: false,
-    success: false,
-    message: "",
-  };
 
   const [state, dispatch] = useReducer(reduce, initialState);
 
@@ -80,8 +46,14 @@ const UseReducer = () => {
       <div className="container mx-auto grid grid-cols-3">
         {state?.data?.map((item, index) => {
           return (
-            <div className="container mx-auto flex justify-between items-center">
-              <div className="p-5 shadow-xl">{item.name}</div>
+            <div
+              key={index}
+              className="container mx-auto flex justify-between items-center p-5 shadow-xl"
+            >
+              <div className="">{item.name}</div>
+              <FaTrash
+                onClick={() => dispatch({ type: "DELETE", payload: item.id })}
+              />
             </div>
           );
         })}
